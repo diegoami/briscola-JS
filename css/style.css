@@ -1,0 +1,90 @@
+#secondHandFirstCard {
+    position:fixed;
+    top:30px;
+    left:200px;
+}
+
+#secondHandSecondCard {
+    position:fixed;
+    top:30px;
+    left:350px;
+}
+#secondHandThirdCard {
+    position:fixed;
+    top:30px;
+    left:500px;
+}
+
+#firstHandFirstCard {
+    position:fixed;
+    top:430px;
+    left:200px;
+}
+
+#firstHandSecondCard {
+    position:fixed;
+    top:430px;
+    left:350px;
+}
+#firstHandThirdCard {
+    position:fixed;
+    top:430px;
+    left:500px;
+}
+
+#deck {
+    position:fixed;
+    top:205px;
+    left:40px;
+    z-index: 2;
+
+}
+
+
+#briscola {
+    position:fixed;
+    top:225px;
+    left:70px;
+    z-index: 1;
+}
+#deckTypeComboBox {
+    position:fixed;
+    top:300px;
+    left:600px;
+}
+
+
+
+#tableSecondHand {
+    position:fixed;
+    top:185px;
+    left:260px;
+}
+
+#tableFirstHand {
+    position:fixed;
+    top:245px;
+    left:400px;
+}
+
+#logArea {
+    position:fixed;
+    top:205px;
+    left:600px;
+    display: none;
+}
+
+
+#firstScore {
+    position:fixed;
+    top:450px;
+    left:600px;
+
+}
+
+#secondScore {
+    position:fixed;
+    top:50px;
+    left:600px;
+
+}

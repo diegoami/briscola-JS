@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <title></title>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/card.js"></script>
+
+    <script src="scripts/deck.js"></script>
+    <script src="scripts/hand.js"></script>
+
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/game.js"></script>
+
+
+</head>
+<title>Discola 0.0.2</title>
+<body BGCOLOR="green">
+
+
+<img id="firstHandFirstCard"  src=""/>
+<img id="firstHandSecondCard"  src=""/>
+<img id="firstHandThirdCard" src=""/>
+
+<img id="secondHandFirstCard" src=""/>
+<img id="secondHandSecondCard" src=""/>
+<img id="secondHandThirdCard" src=""/>
+
+<img  id="tableFirstHand" src=""/>
+<img id="tableSecondHand" src=""/>
+
+<img id="deck" src="Trevisane/dorso.bmp"/>
+<img id="briscola" src="Trevisane/dorso.bmp"/>
+
+<button id="restartButton" onclick="restart();">Restart</button>
+
+<select id="deckTypeComboBox" onchange="GAME.updateUI(UI);">
+    <option value="Trevisane">Trevisane</option>
+    <option value="Piacentine">Piacentine</option>
+    <option value="Romagnole">Romagnole</option>
+    <option value="Napoletane">Napoletane</option>
+    <option value="Francesi">Francesi</option>
+</select>
+
+<div id="firstScore"></div>
+<div id="secondScore"></div>
+
+<textarea id="logArea" cols="25"rows="15" ></textarea>
+<script>
+    main();
+
+</script>
+</body>
+
+</html>
