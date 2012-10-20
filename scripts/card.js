@@ -15,7 +15,7 @@ var cardConstructor = function(seme, numero) {
     var nomeNumeri = ["Asso", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette", "Fante", "Cavallo", "Re"];
 
     var values = [11, 0, 10, 0, 0, 0, 0, 2, 3, 4];
-    var order = [11, 2, 10, 3, 4, 5, 6, 7, 9]
+    var order =  [11, 1, 10, 2, 3, 4, 5, 6, 7, 8];
     var nomeSemi = {
         'b' : "Bastoni",
         's' : "Spade",
@@ -43,6 +43,10 @@ var cardConstructor = function(seme, numero) {
         return values[that.numero-1];
     }
 
+    that.getOrder = function() {
+        return order[that.numero-1];
+    }
+
     that.beats = function(otherCard, briscolaCard) {
         console && console.log("beats("+that+","+otherCard+","+briscolaCard+")");
 
@@ -55,9 +59,13 @@ var cardConstructor = function(seme, numero) {
         }
         if (otherCard.getValue() > that.getValue() && that.seme === otherCard.seme) {
             return false;
-        }  else {
-            return true;
         }
+
+        if (otherCard.getOrder() > that.getOrder() && that.seme === otherCard.seme) {
+            return false;
+        }
+
+        return true;
     }
 
 

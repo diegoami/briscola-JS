@@ -34,7 +34,9 @@ var uiConstructor = function() {
 
 
     that.setSrcForImage = function(id,card) {
+        var image = that.getImageLoc(card)
         $(id).attr('src',that.getImageLoc(card));
+        this.hideIf(id,!image);
 
     }
 
@@ -46,9 +48,15 @@ var uiConstructor = function() {
 
 
     that.showSecondHand = function(hand) {
-        that.setSrcForImage("#secondHandFirstCard",hand.firstCard);
-        that.setSrcForImage("#secondHandSecondCard",hand.secondCard);
-        that.setSrcForImage("#secondHandThirdCard",hand.thirdCard);
+        if (GAME.cheat) {
+            that.setSrcForImage("#secondHandFirstCard",hand.firstCard);
+            that.setSrcForImage("#secondHandSecondCard",hand.secondCard);
+            that.setSrcForImage("#secondHandThirdCard",hand.thirdCard);
+        } else {
+            that.setImageForDorso("#secondHandFirstCard", !hand.firstCard);
+            that.setImageForDorso("#secondHandSecondCard", !hand.secondCard);
+            that.setImageForDorso("#secondHandThirdCard", !hand.thirdCard);
+        }
 
     }
 
@@ -66,10 +74,14 @@ var uiConstructor = function() {
 
     }
 
-    that.showDorso = function(hide) {
+    that.setImageForDorso = function(id, hide) {
+        $(id).attr('src',that.getCardType()+'/dorso.bmp');
+        that.hideIf($(id), hide);
 
-        $("#deck").attr('src', that.getCardType()+'/dorso.bmp');
-        that.hideIf("#deck", hide);
+    }
+
+    that.showDorso = function(hide) {
+        that.setImageForDorso("#deck", hide);
     }
 
     that.showBriscola = function(briscola, hide) {
@@ -82,6 +94,10 @@ var uiConstructor = function() {
         $("#firstScore").html(firstScore);
         $("#secondScore").html(secondScore);
 
+    }
+
+    that.showCardsLeft = function(cardsLeft) {
+        $("#cardsAbove").html(cardsLeft);
     }
 
     that.showCardInLog = function(card) {

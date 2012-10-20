@@ -68,97 +68,59 @@ var handConstructor = function(firstCard, secondCard, thirdCard) {
         }
     }
 
+    that.checkRule = function(ruleName, selectCardsFunc, playCardFunc, cardPlayed) {
+        console && console.log("Check Rule : "+ruleName + " against card "+ cardPlayed);
+        var selectedCards =  that.cardsHaving(selectCardsFunc, cardPlayed);
+        for (var i = 0 ; i < selectedCards.length; i++) {
+            console & console.log("Found Card "+that[selectedCards[i]]);
+        }
+        if (selectedCards.length > 0) {
+            return playCardFunc.call(that, selectedCards);
+        }
+        return 0;
+    }
+
     that.getBestSecondCard = function(cardPlayed) {
 
-        console && console.log("getBestSecondCard ("+cardPlayed+")");
+        var toPlayCard = that.checkRule("STROZZA", function(card, otherCard) {
+            return card.getValue() > otherCard.getValue() && card.seme !== that.deck.getBriscola().seme && card.seme === otherCard.seme;
+        },that.playHighestCardFromArray, cardPlayed);
 
-        var cardStrozza  = that.cardsHaving(
-            function(card, otherCard) {
+        if (!toPlayCard) toPlayCard = that.checkRule("NO BRISCOLA", function(card, otherCard) {
+            return card.seme === that.deck.getBriscola().seme && otherCard.seme !== otherCard.seme && otherCard.getValue() > 0;
+        },that.playLowestCardFromArray, cardPlayed);
 
-                return card.getValue() > otherCard.getValue() && card.seme !== that.deck.getBriscola().seme && card.seme === otherCard.seme;
-            }, cardPlayed
-        );
-        console && console.log(cardStrozza.toString());
+        if (!toPlayCard) toPlayCard = that.checkRule("OTHER CARD BRISCOLA", function(card, otherCard) {
+            return otherCard.seme === that.deck.getBriscola().seme && otherCard.seme !== card.seme && card.getValue() < 10;
+        },that.playLowestCardFromArray, cardPlayed);
 
-        if (cardStrozza.length > 0) {
-            console && console.log("STROZZA");
-            return that.playHighestCardFromArray(cardStrozza);
-        }
-        var otherCardNoBriscola  = that.cardsHaving(
-            function(card, otherCard) {
-                return card.seme === that.deck.getBriscola().seme && otherCard.seme !== otherCard.seme && otherCard.getValue() > 0;
-            }, cardPlayed
-        );
-        console && console.log(otherCardNoBriscola.toString());
+        if (!toPlayCard) toPlayCard = that.checkRule("OTHER CARD SCARTINA", function(card, otherCard) {
+            otherCard.seme !== that.deck.getBriscola().seme && otherCard.seme !== card.seme && otherCard.getValue() < 10 && card.getValue() < 10;
+        },that.playLowestCardFromArray, cardPlayed);
 
-        if (otherCardNoBriscola.length > 0) {
-            console && console.log("NO BRISCOLA");
-
-            return that.playLowestCardFromArray(otherCardNoBriscola );
-        }
-
-        var otherCardBriscola  = that.cardsHaving(
-            function(card, otherCard) {
-                return otherCard.seme === that.deck.getBriscola().seme && otherCard.seme !== card.seme && card.getValue() < 10;
-            }, cardPlayed
-        );
-        console && console.log(otherCardBriscola.toString());
-        if (otherCardBriscola.length > 0) {
-            console && console.log("BRISCOLA");
-
-            return that.playLowestCardFromArray(otherCardBriscola  );
-        }
-
-
-        var otherCardScartina  = that.cardsHaving(
-            function(card, otherCard) {
-                otherCard.seme !== that.deck.getBriscola().seme && otherCard.seme !== card.seme && otherCard.getValue() < 10 && card.getValue() < 10;
-            }, cardPlayed
-        );
-        console && console.log(otherCardScartina .toString() );
-
-        if (otherCardScartina .length > 0) {
-            console && console.log("SCARTINA");
-            return that.playLowestCardFromArray(otherCardScartina );
-        }
-        return that.playRandomCard();
-
+        if (!toPlayCard) toPlayCard = that.playLowestCardFromArray(this.availCards());
+        return toPlayCard;
 
     }
 
     that.getBestFirstCard = function() {
-        var cardNoValues = that.cardsHaving(
-            function(card) {
-                return card.getValue() === 0 && card.seme !== that.deck.getBriscola().seme;
-            }
-        );
-        if (cardNoValues.length > 0) {
-            console && console.log("SCARTINA");
 
-            return that.playRandomCardFromArray(cardNoValues);
-        }
-        var cardSmallValues = that.cardsHaving(
-            function(card) {
-                return card.getValue() < 10 && card.seme !== that.deck.getBriscola().seme;
-            }
-        );
-        if (cardSmallValues.length > 0) {
-            console && console.log("SMALL");
+        var toPlayCard = that.checkRule("SCARTINA", function(card, otherCard) {
+            return card.getValue() === 0 && card.seme !== that.deck.getBriscola().seme;
+        },that.playLowestCardFromArray, undefined);
 
-            return that.playRandomCardFromArray(cardSmallValues);
-        }
+        if (!toPlayCard) toPlayCard = that.checkRule("SMALLCARD", function(card, otherCard) {
+            return card.getValue() < 10 && card.seme !== that.deck.getBriscola().seme;
+        },that.playLowestCardFromArray, undefined);
 
-        var cardSmallBriscola = that.cardsHaving(
-            function(card) {
-                return card.getValue() < 10 ;
-            }
-        );
-        if (cardSmallBriscola .length > 0) {
-            console && console.log("BRISCOLA");
 
-            return that.playLowestCardFromArray(cardSmallBriscola );
-        }
-        return that.playLowestCardFromArray(that.availCards() );
+        if (!toPlayCard) toPlayCard = that.checkRule("SMALLBRISCOLA", function(card, otherCard) {
+            return card.getValue() < 10 ;
+        },that.playLowestCardFromArray, undefined);
+
+        if (!toPlayCard) toPlayCard = that.playLowestCardFromArray(that.availCards() );
+
+        return toPlayCard;
 
     }
 
@@ -172,19 +134,28 @@ var handConstructor = function(firstCard, secondCard, thirdCard) {
 
     that.playHighestCardFromArray = function(cardArr) {
         var result = cardArr[0];
+        console & console.log("playHighestCardFromArray : "+that[result]);
         for (var i = 0 ; i < cardArr.length; i++) {
             if (that[cardArr[i]].getValue() > that[result].getValue()) {
                 result = cardArr[i];
+                console & console.log("playHighestCardFromArray : PICKING "+that[result]);
+            } else {
+                console & console.log("playHighestCardFromArray : REFUSING "+that[result]);
             }
+
         }
         return that.popCard(result);
     }
 
     that.playLowestCardFromArray = function(cardArr) {
         var result = cardArr[0];
+        console & console.log("playLowestCardFromArray : "+that[result]);
         for (var i = 0 ; i < cardArr.length; i++) {
             if (that[cardArr[i]].getValue() < that[result].getValue()) {
                 result = cardArr[i];
+                console & console.log("playLowestCardFromArray : "+that[result]);
+            } else {
+                console & console.log("playLowestCardFromArray : "+that[result]);
             }
         }
         return that.popCard(result);

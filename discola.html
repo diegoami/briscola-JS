@@ -33,6 +33,7 @@
 <img id="briscola" src="Trevisane/dorso.bmp"/>
 
 <button id="restartButton" onclick="restart();">Restart</button>
+<button id="cheatButton" onclick="toggleCheat();">Toggle Cheat</button>
 
 <select id="deckTypeComboBox" onchange="GAME.updateUI(UI);">
     <option value="Trevisane">Trevisane</option>
@@ -44,6 +45,7 @@
 
 <div id="firstScore"></div>
 <div id="secondScore"></div>
+<div id="cardsAbove"></div>
 
 <textarea id="logArea" cols="25"rows="15" ></textarea>
 <script>

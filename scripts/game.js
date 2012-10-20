@@ -10,7 +10,7 @@ var gameConstructor = function() {
     var that = new Object();
     that.firstScore = 0;
     that.secondScore = 0;
-
+    that.cheat = false;
     that.status = 1;
     that.start = function() {
         that.deck = deckConstructor();
@@ -28,14 +28,14 @@ var gameConstructor = function() {
 
 
     that.playCard = function(id) {
-        cardRegExp = /((?:first|second|third)Hand)((?:first|second|third)Card)/i;
-        matches = cardRegExp.exec(id);
+        var cardRegExp = /((?:first|second|third)Hand)((?:first|second|third)Card)/i;
+        var matches = cardRegExp.exec(id);
         if (matches) {
-            handId = matches[1];
-            matchedCardId = matches[2];
-            cardId =  matchedCardId.charAt(0).toLowerCase() + matchedCardId.slice(1);
-            hand = that[handId];
-            card = hand.popCard(cardId);
+            var handId = matches[1];
+            var matchedCardId = matches[2];
+            var cardId =  matchedCardId.charAt(0).toLowerCase() + matchedCardId.slice(1);
+            var hand = that[handId];
+            var card = hand.popCard(cardId);
             that.table[handId] = card;
             return card;
         } else {
@@ -51,6 +51,7 @@ var gameConstructor = function() {
         UI.showDorso( ! that.deck.hasCards());
         UI.showBriscola(that.deck.getBriscola(), ! that.deck.hasCards());
         UI.showScore(that.firstScore, that.secondScore);
+        UI.showCardsLeft(that.deck.cards.length);
 
     }
 
@@ -99,6 +100,10 @@ var gameConstructor = function() {
 }
 
 var GAME;
+
+function toggleCheat() {
+    GAME.cheat = ! GAME.cheat;
+}
 
 function restart() {
     GAME = gameConstructor();
