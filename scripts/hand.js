@@ -98,6 +98,11 @@ var handConstructor = function(firstCard, secondCard, thirdCard) {
             otherCard.seme !== that.deck.getBriscola().seme && otherCard.seme !== card.seme && otherCard.getValue() < 10 && card.getValue() < 10;
         },that.playLowestCardFromArray, cardPlayed);
 
+        if (!toPlayCard) toPlayCard = that.checkRule("OTHER CARD CARICO", function(card, otherCard) {
+            otherCard.seme !== that.deck.getBriscola().seme && card.seme === that.deck.getBriscola().seme  && otherCard.getValue() >= 10;
+        },that.playLowestCardFromArray, cardPlayed);
+
+
         if (!toPlayCard) toPlayCard = that.playLowestCardFromArray(this.availCards());
         return toPlayCard;
 
